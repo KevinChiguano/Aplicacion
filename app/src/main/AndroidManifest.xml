@@ -16,10 +16,10 @@
             android:name=".ui.activities.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.PrincipalActivity"
+            android:name=".ui.activities.LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.activities.LoginActivity"
+            android:name=".ui.activities.PrincipalActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
