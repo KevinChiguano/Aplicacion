@@ -26,10 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="149dp"
                 android:id="@+id/imaview"
-                android:src="@drawable/logo_chat_gpt"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
+                android:src="@drawable/logo_chat_gpt"/>
 
 
             <TextView
@@ -40,35 +37,29 @@
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:fontFamily="@font/satisfy"
-                android:text="My primer fragment"
-                app:layout_constraintBottom_toBottomOf="@id/imaview"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
-
-
-
+                android:text="My primer fragment" />
 
 
     </androidx.cardview.widget.CardView>
 
     <Spinner
+        android:id="@+id/spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/spinner"
         android:layout_margin="25dp"
-        app:layout_constraintBottom_toBottomOf="@+id/cardView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView"/>
 
     <ListView
+        android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="25dp"
-        android:id="@+id/listView"
         android:layout_marginBottom="4dp"
-        app:layout_constraintBottom_toBottomOf="@+id/spinner"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/spinner" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

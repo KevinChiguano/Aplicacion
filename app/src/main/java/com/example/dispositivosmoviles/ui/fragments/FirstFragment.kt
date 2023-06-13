@@ -34,7 +34,7 @@ class FirstFragment : Fragment() {
 
         val adapter = ArrayAdapter<String>(
             requireActivity(),
-            android.R.layout.simple_spinner_item,
+            R.layout.simple_layout,
             names
         )
 
