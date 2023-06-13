@@ -10,6 +10,7 @@
 
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="225dp"
         android:elevation="10dp"
@@ -20,24 +21,54 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="149dp"
-            android:src="@drawable/logo_chat_gpt" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="149dp"
+                android:id="@+id/imaview"
+                android:src="@drawable/logo_chat_gpt"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
 
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="bottom|center"
-            android:textSize="42sp"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:fontFamily="@font/satisfy"
-            android:text="My primer fragment"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="bottom|center"
+                android:textSize="35sp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:fontFamily="@font/satisfy"
+                android:text="My primer fragment"
+                app:layout_constraintBottom_toBottomOf="@id/imaview"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+
+
+
 
     </androidx.cardview.widget.CardView>
 
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner"
+        android:layout_margin="25dp"
+        app:layout_constraintBottom_toBottomOf="@+id/cardView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="25dp"
+        android:id="@+id/listView"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toBottomOf="@+id/spinner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
