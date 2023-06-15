@@ -39,7 +39,7 @@ class FirstFragment : Fragment() {
         )
 
         binding.spinner.adapter = adapter
-        binding.listView.adapter = adapter
+        //binding.listView.adapter = adapter
     }
 
 
