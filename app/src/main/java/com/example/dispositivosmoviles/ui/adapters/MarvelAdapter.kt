@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.dispositivosmoviles.R
 import com.example.dispositivosmoviles.data.marvel.MarvelChars
 import com.example.dispositivosmoviles.databinding.MarvelCharactersBinding
+import com.google.android.material.snackbar.Snackbar
+import com.squareup.picasso.Picasso
 
 //Enviar el listado
 class MarvelAdapter(private val items: List<MarvelChars>) :
@@ -18,10 +20,21 @@ class MarvelAdapter(private val items: List<MarvelChars>) :
 
         private val binding : MarvelCharactersBinding = MarvelCharactersBinding.bind(view)
 
+        //hacer los cambios en esta funcion
         fun render(item : MarvelChars){
             println("Recibiendo a ${item.name}")
             binding.txtName.text = item.name
             binding.txtComic.text = item.comic
+            Picasso.get().load(item.image).into(binding.imgMarvel)
+
+            binding.imgMarvel.setOnClickListener{
+                Snackbar.make(binding.imgMarvel,
+                    item.name,
+                    Snackbar.LENGTH_SHORT)
+                    .show()
+            }
+
+
         }
 
     }
