@@ -8,16 +8,21 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.example.dispositivosmoviles.R
 import com.example.dispositivosmoviles.data.marvel.MarvelChars
 import com.example.dispositivosmoviles.databinding.FragmentFirstBinding
+import com.example.dispositivosmoviles.logic.jikanLogic.JikanAnimeLogic
 import com.example.dispositivosmoviles.logic.list.ListItems
 import com.example.dispositivosmoviles.ui.activities.DatailsMarvelItem
 import com.example.dispositivosmoviles.ui.activities.LoginActivity
 import com.example.dispositivosmoviles.ui.activities.MainActivity
 import com.example.dispositivosmoviles.ui.adapters.MarvelAdapter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class FirstFragment : Fragment() {
@@ -70,21 +75,31 @@ class FirstFragment : Fragment() {
     }
 
     fun chargeDataRV(){
-        val rvAdapter = MarvelAdapter(
-            ListItems().returnMarvelChars(),
-        ) {sendMarvelItem(it)}
 
-        val rvMarvel = binding.rvMarvelChars
+        lifecycleScope.launch(Dispatchers.IO) {
+            val rvAdapter = MarvelAdapter(
+                //ListItems().returnMarvelChars()
+                JikanAnimeLogic().getAllAnimes(),
+            ) {sendMarvelItem(it)}
 
-        //enlazar el adaptador con el conponente
-        rvMarvel.adapter = rvAdapter
+            withContext(Dispatchers.Main){
+                with(binding.rvMarvelChars){
+                    val rvMarvel = binding.rvMarvelChars
 
-        //necesita 3 cosas: un contexto, vista vertical, que se presenten de forma normal o al revez
-        rvMarvel.layoutManager = LinearLayoutManager(
-            requireActivity(), //contexto -> se pasa el contexto de la activity
-            LinearLayoutManager.VERTICAL,
-            false)
+                    //enlazar el adaptador con el conponente
+                    //rvMarvel.adapter = rvAdapter
+                    this.adapter = rvAdapter
 
+                    //necesita 3 cosas: un contexto, vista vertical, que se presenten de forma normal o al revez
+                    //rvMarvel.layoutManager = LinearLayoutManager
+                    this.layoutManager = LinearLayoutManager(
+                        requireActivity(), //contexto -> se pasa el contexto de la activity
+                        LinearLayoutManager.VERTICAL,
+                        false)
+                }
+
+            }
+        }
     }
 
 

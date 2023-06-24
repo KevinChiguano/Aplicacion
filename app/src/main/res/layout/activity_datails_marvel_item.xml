@@ -26,12 +26,12 @@
 
     <ImageView
         android:id="@+id/imgMarvel"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:layout_marginTop="108dp"
+        android:layout_width="350dp"
+        android:layout_height="437dp"
+        android:layout_marginTop="44dp"
 
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
