@@ -44,7 +44,7 @@ class PrincipalActivity : AppCompatActivity() {
         }*/
 
         //Log.d("UCE","Hola ${name}")
-        binding.textName.text = "Bienvenido "+name.toString()
+        //binding.textName.text = "Bienvenido "+name.toString()
 
         //Log.d("UCE","Entrada a Start")
 
