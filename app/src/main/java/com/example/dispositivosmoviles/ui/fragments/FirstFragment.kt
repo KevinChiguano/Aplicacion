@@ -16,6 +16,7 @@ import com.example.dispositivosmoviles.data.marvel.MarvelChars
 import com.example.dispositivosmoviles.databinding.FragmentFirstBinding
 import com.example.dispositivosmoviles.logic.jikanLogic.JikanAnimeLogic
 import com.example.dispositivosmoviles.logic.list.ListItems
+import com.example.dispositivosmoviles.logic.marvelLogic.MarvelLogic
 import com.example.dispositivosmoviles.ui.activities.DatailsMarvelItem
 import com.example.dispositivosmoviles.ui.activities.LoginActivity
 import com.example.dispositivosmoviles.ui.activities.MainActivity
@@ -79,7 +80,8 @@ class FirstFragment : Fragment() {
         lifecycleScope.launch(Dispatchers.IO) {
             val rvAdapter = MarvelAdapter(
                 //ListItems().returnMarvelChars()
-                JikanAnimeLogic().getAllAnimes(),
+                //JikanAnimeLogic().getAllAnimes(),
+                MarvelLogic().getMarvelChars("spi",5)
             ) {sendMarvelItem(it)}
 
             withContext(Dispatchers.Main){

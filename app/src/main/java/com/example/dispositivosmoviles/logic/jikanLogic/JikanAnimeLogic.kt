@@ -9,11 +9,21 @@ class JikanAnimeLogic {
     suspend fun getAllAnimes():List<MarvelChars>{
 
         //llamar endpoit base
-        var call = ApiConnection.getJiKanConnection()
+        //var call = ApiConnection.getJiKanConnection()
         //realizar endpoint especifico
-        val response = call.create(JikanEndpoint::class.java).getAllAnimes()
+       //val response = call.create(JikanEndpoint::class.java).getAllAnimes()
+
+
+
 
         var itemList = arrayListOf<MarvelChars>()
+
+        val response = ApiConnection.getService(
+            ApiConnection.typeApi.Jikan,
+            JikanEndpoint::class.java
+        ).getAllAnimes()
+
+
 
         //si se ejecuto la respuesta
         if(response.isSuccessful){
