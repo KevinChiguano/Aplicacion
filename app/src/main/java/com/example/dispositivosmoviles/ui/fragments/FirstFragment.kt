@@ -31,10 +31,9 @@ class FirstFragment : Fragment() {
 
     private lateinit var binding : FragmentFirstBinding
 
-    private lateinit var lmanager : LinearLayoutManager
+    private lateinit var lmanager: LinearLayoutManager
 
-    private var  rvAdapter : MarvelAdapter = MarvelAdapter { sendMarvelItem(it) }
-
+    private lateinit var rvAdapter: MarvelAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -83,31 +82,32 @@ class FirstFragment : Fragment() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
 
+                    if (dy > 0) {
 
-                    if(dx > 0){
+                        val v = lmanager.childCount
+                        val p = lmanager.findFirstVisibleItemPosition()
+                        val t = lmanager.itemCount
 
-                        val v = lmanager.childCount //cuantos han pasado
-                        val p = lmanager.findFirstVisibleItemPosition() //posicion actual
-                        val t = lmanager.itemCount //cuantos tengo en total
-
-                        if((v +p) >= t){
-
-                            lifecycleScope.launch((Dispatchers.IO))
-                            {
+                        // v
+                        // p es la posicion en la que esta
+                        // t es el total de items
+                        if ((v + p) >= t) {
+                            lifecycleScope.launch(Dispatchers.IO) {
                                 val newItems = JikanAnimeLogic().getAllAnimes()
-//                                val newItems = MarvelLogic().getMarvelChars(
-//                                    "spider",
-//                                    20
-//                                )
-
-                                withContext(Dispatchers.Main){
-                                    rvAdapter.updateListItems(newItems)
+                                /*val newItems = MarvelLogic().getMarvelChars(
+                                    name = "spi",
+                                    limit = 20
+                                )
+                                */
+                                withContext(Dispatchers.Main) {
+                                    rvAdapter.updateListItem(newItems)
                                 }
                             }
                         }
                     }
                 }
-        })
+            }
+        )
 
     }
 
@@ -137,8 +137,11 @@ class FirstFragment : Fragment() {
     fun chargeDataRV(search: String){
 
         lifecycleScope.launch(Dispatchers.IO) {
-            rvAdapter.items = JikanAnimeLogic().getAllAnimes()
 
+
+            rvAdapter = MarvelAdapter(
+                JikanAnimeLogic().getAllAnimes()
+            ){sendMarvelItem(it)}
 
 
             withContext(Dispatchers.Main){

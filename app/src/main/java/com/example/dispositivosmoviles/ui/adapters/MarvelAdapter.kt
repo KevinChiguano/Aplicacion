@@ -12,11 +12,10 @@ import com.squareup.picasso.Picasso
 
 //Enviar el listado
 class MarvelAdapter(
+                    private var items: List<MarvelChars>,
                     private var fnClick : (MarvelChars) -> Unit
                     ) :
     RecyclerView.Adapter<MarvelAdapter.MarvelViewHolder>(){
-
-    var items: List<MarvelChars> = listOf()
 
     //Definir que voy a hacer
     //Trabaja con la vista del metodo de abajo
@@ -67,8 +66,8 @@ class MarvelAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    fun updateListItems(newItems: List<MarvelChars>){
-        items = items.plus(newItems)
+    fun updateListItem(newItems: List<MarvelChars>){
+        this.items = this.items.plus(newItems)
         notifyDataSetChanged()
     }
 
