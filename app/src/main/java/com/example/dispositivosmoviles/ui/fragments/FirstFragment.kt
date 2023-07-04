@@ -32,7 +32,7 @@ class FirstFragment : Fragment() {
 
     private lateinit var binding : FragmentFirstBinding
 
-    private lateinit var lmanager: LinearLayoutManager
+    private lateinit var lManager: LinearLayoutManager
 
     private lateinit var rvAdapter: MarvelAdapter
 
@@ -51,7 +51,7 @@ class FirstFragment : Fragment() {
 
         //da la disposicion de orientacion
         //sabe cuantos elementos han pasado
-        lmanager = LinearLayoutManager(
+        lManager = LinearLayoutManager(
             requireActivity(), //contexto -> se pasa el contexto de la activity
             LinearLayoutManager.VERTICAL,
             false
@@ -75,11 +75,12 @@ class FirstFragment : Fragment() {
         binding.spinner.adapter = adapter
         //binding.listView.adapter = adapter
 
-        chargeDataRV("cap")
+        chargeDataRV(5)
 
         binding.rvSwipe.setOnRefreshListener {
-            chargeDataRV("cap")
+            chargeDataRV(5)
             binding.rvSwipe.isRefreshing = false
+            lManager.scrollToPositionWithOffset(5,20)
         }
 
         binding.rvMarvelChars.addOnScrollListener(
@@ -89,9 +90,9 @@ class FirstFragment : Fragment() {
 
                     if (dy > 0) {
 
-                        val v = lmanager.childCount
-                        val p = lmanager.findFirstVisibleItemPosition()
-                        val t = lmanager.itemCount
+                        val v = lManager.childCount
+                        val p = lManager.findFirstVisibleItemPosition()
+                        val t = lManager.itemCount
 
                         // v
                         // p es la posicion en la que esta
@@ -149,37 +150,51 @@ class FirstFragment : Fragment() {
     }
 
     //cambios
-    fun chargeDataRV(search: String){
+    fun chargeDataRV(pos: Int){
 
+//        lifecycleScope.launch(Dispatchers.IO) {
+//
+//            var marvelCharsItems = MarvelLogic().getMarvelChars(
+//                "spider", page * 2
+//            )
+//            rvAdapter = MarvelAdapter(
+//                marvelCharsItems,
+//                fnClick = { sendMarvelItem(it)}
+//            )
+//
+//            withContext(Dispatchers.Main){
+//                with(binding.rvMarvelChars){
+//                    this.adapter = rvAdapter
+//                    this.layoutManager = lManager
+//                }
+//                lManager.scrollToPositionWithOffset(pos,10)
+//            }
+//        }
+//
+//        page++
 
 
         lifecycleScope.launch(Dispatchers.IO) {
 
-            var marvelCharchItems = MarvelLogic().getMarvelChars(
-                "spider", page*2
-            )
+            var marvelCharchItems = JikanAnimeLogic().getAllAnimes()
 
             rvAdapter = MarvelAdapter(
-                JikanAnimeLogic().getAllAnimes()
-            ){sendMarvelItem(it)}
-
+                marvelCharchItems,
+                fnClick = {sendMarvelItem(it)}
+            )
             withContext(Dispatchers.Main){
-
-
                 with(binding.rvMarvelChars){
                     val rvMarvel = binding.rvMarvelChars
-
                     //enlazar el adaptador con el conponente
                     //rvMarvel.adapter = rvAdapter
                     this.adapter = rvAdapter
-
                     //necesita 3 cosas: un contexto, vista vertical, que se presenten de forma normal o al revez
                     //rvMarvel.layoutManager = LinearLayoutManager
-                    this.layoutManager = lmanager
+                    this.layoutManager = lManager
                 }
-
             }
         }
+
     }
 
 
