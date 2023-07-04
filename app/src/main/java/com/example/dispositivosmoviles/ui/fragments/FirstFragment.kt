@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -34,6 +35,10 @@ class FirstFragment : Fragment() {
     private lateinit var lmanager: LinearLayoutManager
 
     private lateinit var rvAdapter: MarvelAdapter
+
+    private var page = 1
+
+    private lateinit var marvelCharchItems: MutableList<MarvelChars>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -109,6 +114,15 @@ class FirstFragment : Fragment() {
             }
         )
 
+        //evento para filtrar la informaicon
+        binding.txtFilter.addTextChangedListener {filteredText ->
+            //devuelve una lista
+            val newItems = marvelCharchItems.filter { items ->
+                items.name.contains(filteredText.toString())
+            }
+            rvAdapter.replaceListAdapter(newItems)
+        }
+
     }
 
     //cambiar de activity desde un fragment
@@ -134,17 +148,24 @@ class FirstFragment : Fragment() {
         }
     }
 
+    //cambios
     fun chargeDataRV(search: String){
+
+
 
         lifecycleScope.launch(Dispatchers.IO) {
 
+            var marvelCharchItems = MarvelLogic().getMarvelChars(
+                "spider", page*2
+            )
 
             rvAdapter = MarvelAdapter(
                 JikanAnimeLogic().getAllAnimes()
             ){sendMarvelItem(it)}
 
-
             withContext(Dispatchers.Main){
+
+
                 with(binding.rvMarvelChars){
                     val rvMarvel = binding.rvMarvelChars
 
