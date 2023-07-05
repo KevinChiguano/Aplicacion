@@ -3,9 +3,8 @@ package com.example.dispositivosmoviles.ui.activities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.dispositivosmoviles.R
-import com.example.dispositivosmoviles.data.marvel.MarvelChars
+import com.example.dispositivosmoviles.logic.data.MarvelChars
 import com.example.dispositivosmoviles.databinding.ActivityDatailsMarvelItemBinding
-import com.example.dispositivosmoviles.databinding.MarvelCharactersBinding
 import com.squareup.picasso.Picasso
 
 class DatailsMarvelItem : AppCompatActivity() {

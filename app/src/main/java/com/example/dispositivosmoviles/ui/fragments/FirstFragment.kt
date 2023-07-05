@@ -6,22 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.LinearLayout
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.example.dispositivosmoviles.R
-import com.example.dispositivosmoviles.data.marvel.MarvelChars
+import com.example.dispositivosmoviles.logic.data.MarvelChars
 import com.example.dispositivosmoviles.databinding.FragmentFirstBinding
-import com.example.dispositivosmoviles.logic.jikanLogic.JikanAnimeLogic
-import com.example.dispositivosmoviles.logic.list.ListItems
 import com.example.dispositivosmoviles.logic.marvelLogic.MarvelLogic
 import com.example.dispositivosmoviles.ui.activities.DatailsMarvelItem
-import com.example.dispositivosmoviles.ui.activities.LoginActivity
-import com.example.dispositivosmoviles.ui.activities.MainActivity
 import com.example.dispositivosmoviles.ui.adapters.MarvelAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -38,7 +32,7 @@ class FirstFragment : Fragment() {
 
     private var page = 1
 
-    private lateinit var marvelCharchItems: MutableList<MarvelChars>
+    private var marvelCharsItems: MutableList<MarvelChars> = mutableListOf<MarvelChars>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,7 +47,7 @@ class FirstFragment : Fragment() {
         //sabe cuantos elementos han pasado
         lManager = LinearLayoutManager(
             requireActivity(), //contexto -> se pasa el contexto de la activity
-            LinearLayoutManager.VERTICAL,
+            LinearLayoutManager.HORIZONTAL,
             false
         )
 
@@ -75,10 +69,10 @@ class FirstFragment : Fragment() {
         binding.spinner.adapter = adapter
         //binding.listView.adapter = adapter
 
-        chargeDataRV(5)
+        chargeDataRV()
 
         binding.rvSwipe.setOnRefreshListener {
-            chargeDataRV(5)
+            chargeDataRV()
             binding.rvSwipe.isRefreshing = false
             lManager.scrollToPositionWithOffset(5,20)
         }
@@ -99,12 +93,12 @@ class FirstFragment : Fragment() {
                         // t es el total de items
                         if ((v + p) >= t) {
                             lifecycleScope.launch(Dispatchers.IO) {
-                                val newItems = JikanAnimeLogic().getAllAnimes()
-                                /*val newItems = MarvelLogic().getMarvelChars(
+                                //val newItems = JikanAnimeLogic().getAllAnimes()
+                                val newItems = MarvelLogic().getMarvelChars(
                                     name = "spi",
                                     limit = 20
                                 )
-                                */
+
                                 withContext(Dispatchers.Main) {
                                     rvAdapter.updateListItem(newItems)
                                 }
@@ -118,8 +112,8 @@ class FirstFragment : Fragment() {
         //evento para filtrar la informaicon
         binding.txtFilter.addTextChangedListener {filteredText ->
             //devuelve una lista
-            val newItems = marvelCharchItems.filter { items ->
-                items.name.contains(filteredText.toString())
+            val newItems = marvelCharsItems.filter { items ->
+                items.name.lowercase().contains(filteredText.toString().lowercase())
             }
             rvAdapter.replaceListAdapter(newItems)
         }
@@ -150,50 +144,47 @@ class FirstFragment : Fragment() {
     }
 
     //cambios
-    fun chargeDataRV(pos: Int){
+    fun chargeDataRV(){
+
+        lifecycleScope.launch(Dispatchers.Main) {
+
+            marvelCharsItems = withContext(Dispatchers.IO){
+                    return@withContext (MarvelLogic().getMarvelChars(
+                        "spider",
+                        20))
+                }
+
+            rvAdapter = MarvelAdapter(
+                marvelCharsItems,
+                fnClick = { sendMarvelItem(it)}
+            )
+
+            binding.rvMarvelChars.apply{
+                this.adapter = rvAdapter
+                this.layoutManager = lManager
+            }
+        }
 
 //        lifecycleScope.launch(Dispatchers.IO) {
 //
-//            var marvelCharsItems = MarvelLogic().getMarvelChars(
-//                "spider", page * 2
-//            )
-//            rvAdapter = MarvelAdapter(
-//                marvelCharsItems,
-//                fnClick = { sendMarvelItem(it)}
-//            )
+//            var marvelCharchItems = JikanAnimeLogic().getAllAnimes()
 //
+//            rvAdapter = MarvelAdapter(
+//                marvelCharchItems,
+//                fnClick = {sendMarvelItem(it)}
+//            )
 //            withContext(Dispatchers.Main){
 //                with(binding.rvMarvelChars){
+//                    val rvMarvel = binding.rvMarvelChars
+//                    //enlazar el adaptador con el conponente
+//                    //rvMarvel.adapter = rvAdapter
 //                    this.adapter = rvAdapter
+//                    //necesita 3 cosas: un contexto, vista vertical, que se presenten de forma normal o al revez
+//                    //rvMarvel.layoutManager = LinearLayoutManager
 //                    this.layoutManager = lManager
 //                }
-//                lManager.scrollToPositionWithOffset(pos,10)
 //            }
 //        }
-//
-//        page++
-
-
-        lifecycleScope.launch(Dispatchers.IO) {
-
-            var marvelCharchItems = JikanAnimeLogic().getAllAnimes()
-
-            rvAdapter = MarvelAdapter(
-                marvelCharchItems,
-                fnClick = {sendMarvelItem(it)}
-            )
-            withContext(Dispatchers.Main){
-                with(binding.rvMarvelChars){
-                    val rvMarvel = binding.rvMarvelChars
-                    //enlazar el adaptador con el conponente
-                    //rvMarvel.adapter = rvAdapter
-                    this.adapter = rvAdapter
-                    //necesita 3 cosas: un contexto, vista vertical, que se presenten de forma normal o al revez
-                    //rvMarvel.layoutManager = LinearLayoutManager
-                    this.layoutManager = lManager
-                }
-            }
-        }
 
     }
 
