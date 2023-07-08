@@ -3,6 +3,7 @@ package com.example.dispositivosmoviles.logic.marvelLogic
 import android.util.Log
 import com.example.dispositivosmoviles.data.connections.ApiConnection
 import com.example.dispositivosmoviles.data.endpoints.MarvelEndpoint
+import com.example.dispositivosmoviles.data.entities.marvel.characters.getMarvelChars
 import com.example.dispositivosmoviles.logic.data.MarvelChars
 
 class MarvelLogic {
@@ -21,18 +22,38 @@ class MarvelLogic {
             if(response.isSuccessful){
                 response.body()!!.data.results.forEach(){
 
-                    var comics:String = "No available"
+                    val m = it.getMarvelChars()
+                    itemList.add(m)
+                }
+            }else{
+                Log.d("UCE", response.toString())
+            }
+        }
 
-                    if(it.comics.items.size > 0){
-                        comics = it.comics.items[0].name
-                    }
+        return itemList
 
-                    val m = MarvelChars(
-                        it.id,
-                        it.name,
-                        comics,
-                        it.thumbnail.path+"."+it.thumbnail.extension
-                    )
+    }
+
+
+    suspend fun getAllMarvelChars(offset: Int, limit:Int):ArrayList<MarvelChars>{
+
+        var itemList = arrayListOf<MarvelChars>()
+        val call = ApiConnection.getService(
+            ApiConnection.typeApi.Marvel,
+            MarvelEndpoint::class.java
+        )
+
+        if(call != null){
+//            val response =
+//                call.getCharactersStartWith(offset, limit)
+
+            val response =
+                call.getAllMarvelChars(offset, limit)
+
+            if(response.isSuccessful){
+                response.body()!!.data.results.forEach(){
+
+                    val m = it.getMarvelChars()
                     itemList.add(m)
                 }
             }else{

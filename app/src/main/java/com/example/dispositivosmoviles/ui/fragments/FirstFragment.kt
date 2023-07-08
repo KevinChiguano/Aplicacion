@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dispositivosmoviles.R
@@ -34,6 +35,9 @@ class FirstFragment : Fragment() {
 
     private var marvelCharsItems: MutableList<MarvelChars> = mutableListOf<MarvelChars>()
 
+
+    private lateinit var gManager: GridLayoutManager
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,9 +51,11 @@ class FirstFragment : Fragment() {
         //sabe cuantos elementos han pasado
         lManager = LinearLayoutManager(
             requireActivity(), //contexto -> se pasa el contexto de la activity
-            LinearLayoutManager.HORIZONTAL,
+            LinearLayoutManager.VERTICAL,
             false
         )
+
+        gManager = GridLayoutManager(requireActivity(),2)
 
         // Inflate the layout for this fragment
         return binding.root
@@ -74,7 +80,7 @@ class FirstFragment : Fragment() {
         binding.rvSwipe.setOnRefreshListener {
             chargeDataRV()
             binding.rvSwipe.isRefreshing = false
-            lManager.scrollToPositionWithOffset(5,20)
+            gManager.scrollToPositionWithOffset(5,20)
         }
 
         binding.rvMarvelChars.addOnScrollListener(
@@ -84,9 +90,9 @@ class FirstFragment : Fragment() {
 
                     if (dy > 0) {
 
-                        val v = lManager.childCount
-                        val p = lManager.findFirstVisibleItemPosition()
-                        val t = lManager.itemCount
+                        val v = gManager.childCount
+                        val p = gManager.findFirstVisibleItemPosition()
+                        val t = gManager.itemCount
 
                         // v
                         // p es la posicion en la que esta
@@ -94,10 +100,7 @@ class FirstFragment : Fragment() {
                         if ((v + p) >= t) {
                             lifecycleScope.launch(Dispatchers.IO) {
                                 //val newItems = JikanAnimeLogic().getAllAnimes()
-                                val newItems = MarvelLogic().getMarvelChars(
-                                    name = "spi",
-                                    limit = 20
-                                )
+                                val newItems = MarvelLogic().getAllMarvelChars(0,99)
 
                                 withContext(Dispatchers.Main) {
                                     rvAdapter.updateListItem(newItems)
@@ -149,9 +152,7 @@ class FirstFragment : Fragment() {
         lifecycleScope.launch(Dispatchers.Main) {
 
             marvelCharsItems = withContext(Dispatchers.IO){
-                    return@withContext (MarvelLogic().getMarvelChars(
-                        "spider",
-                        20))
+                    return@withContext (MarvelLogic().getAllMarvelChars(0,99))
                 }
 
             rvAdapter = MarvelAdapter(
@@ -161,31 +162,9 @@ class FirstFragment : Fragment() {
 
             binding.rvMarvelChars.apply{
                 this.adapter = rvAdapter
-                this.layoutManager = lManager
+                this.layoutManager = gManager
             }
         }
-
-//        lifecycleScope.launch(Dispatchers.IO) {
-//
-//            var marvelCharchItems = JikanAnimeLogic().getAllAnimes()
-//
-//            rvAdapter = MarvelAdapter(
-//                marvelCharchItems,
-//                fnClick = {sendMarvelItem(it)}
-//            )
-//            withContext(Dispatchers.Main){
-//                with(binding.rvMarvelChars){
-//                    val rvMarvel = binding.rvMarvelChars
-//                    //enlazar el adaptador con el conponente
-//                    //rvMarvel.adapter = rvAdapter
-//                    this.adapter = rvAdapter
-//                    //necesita 3 cosas: un contexto, vista vertical, que se presenten de forma normal o al revez
-//                    //rvMarvel.layoutManager = LinearLayoutManager
-//                    this.layoutManager = lManager
-//                }
-//            }
-//        }
-
     }
 
 
