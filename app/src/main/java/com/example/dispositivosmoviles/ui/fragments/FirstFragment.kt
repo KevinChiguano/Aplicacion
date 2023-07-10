@@ -72,7 +72,7 @@ class FirstFragment : Fragment() {
             names
         )
 
-        binding.spinner.adapter = adapter
+//        binding.spinner.adapter = adapter
         //binding.listView.adapter = adapter
 
         chargeDataRV()
@@ -113,13 +113,13 @@ class FirstFragment : Fragment() {
         )
 
         //evento para filtrar la informaicon
-        binding.txtFilter.addTextChangedListener {filteredText ->
-            //devuelve una lista
-            val newItems = marvelCharsItems.filter { items ->
-                items.name.lowercase().contains(filteredText.toString().lowercase())
-            }
-            rvAdapter.replaceListAdapter(newItems)
-        }
+//        binding.txtFilter.addTextChangedListener {filteredText ->
+//            //devuelve una lista
+//            val newItems = marvelCharsItems.filter { items ->
+//                items.name.lowercase().contains(filteredText.toString().lowercase())
+//            }
+//            rvAdapter.replaceListAdapter(newItems)
+//        }
 
     }
 
