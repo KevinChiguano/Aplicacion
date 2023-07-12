@@ -16,9 +16,11 @@ import com.example.dispositivosmoviles.R
 import com.example.dispositivosmoviles.databinding.FragmentFirstBinding
 import com.example.dispositivosmoviles.databinding.FragmentSecondBinding
 import com.example.dispositivosmoviles.logic.data.MarvelChars
+import com.example.dispositivosmoviles.logic.data.getMarvelCharsDB
 import com.example.dispositivosmoviles.logic.marvelLogic.MarvelLogic
 import com.example.dispositivosmoviles.ui.activities.DatailsMarvelItem
 import com.example.dispositivosmoviles.ui.adapters.MarvelAdapter
+import com.example.dispositivosmoviles.ui.utilities.DispositivosMoviles
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -130,6 +132,18 @@ class SecondFragment : Fragment() {
         startActivity(i)
     }
 
+    fun saveMarvelItem(item: MarvelChars):Boolean {
+        lifecycleScope.launch(Dispatchers.Main){
+            withContext(Dispatchers.IO){
+                DispositivosMoviles
+                    .getDbInstance()
+                    .marvelDao()
+                    .insertMarvelChar(listOf( item.getMarvelCharsDB()))
+            }
+        }
+        return false
+    }
+
     //cambios
     fun chargeDataRV(name: String){
 
@@ -141,7 +155,8 @@ class SecondFragment : Fragment() {
 
             rvAdapter = MarvelAdapter(
                 marvelCharsItems,
-                fnClick = { sendMarvelItem(it)}
+                fnClick = { sendMarvelItem(it)},
+                fnSave = {saveMarvelItem(it)}
             )
 
             binding.rvMarvelChars.apply{
@@ -150,5 +165,7 @@ class SecondFragment : Fragment() {
             }
         }
     }
+
+
 
 }

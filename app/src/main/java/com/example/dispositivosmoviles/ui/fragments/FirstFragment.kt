@@ -146,6 +146,7 @@ class FirstFragment : Fragment() {
                     .insertMarvelChar(listOf( item.getMarvelCharsDB()))
             }
         }
+        return false
     }
 
 
@@ -160,7 +161,8 @@ class FirstFragment : Fragment() {
 
             rvAdapter = MarvelAdapter(
                 marvelCharsItems,
-                fnClick = { sendMarvelItem(it) }
+                fnClick = { sendMarvelItem(it) },
+                fnSave = {saveMarvelItem(it)}
             )
 
             binding.rvMarvelChars.apply {
@@ -184,7 +186,8 @@ class FirstFragment : Fragment() {
                 }
                 rvAdapter = MarvelAdapter(
                     marvelCharsItems,
-                    fnClick = { sendMarvelItem(it) }
+                    fnClick = { sendMarvelItem(it) },
+                    fnSave = {saveMarvelItem(it)}
                 )
 
                 binding.rvMarvelChars.apply {
