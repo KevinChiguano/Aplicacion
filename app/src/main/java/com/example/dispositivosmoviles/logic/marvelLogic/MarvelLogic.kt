@@ -9,10 +9,12 @@ import com.example.dispositivosmoviles.data.entities.marvel.characters.getMarvel
 import com.example.dispositivosmoviles.logic.data.MarvelChars
 import com.example.dispositivosmoviles.logic.data.getMarvelCharsDB
 import com.example.dispositivosmoviles.ui.utilities.DispositivosMoviles
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class MarvelLogic {
 
-    suspend fun getMarvelChars(name: String, limit:Int):ArrayList<MarvelChars>{
+    suspend fun getMarvelChars(name: String, limit: Int): ArrayList<MarvelChars> {
 
         var itemList = arrayListOf<MarvelChars>()
         val call = ApiConnection.getService(
@@ -20,16 +22,16 @@ class MarvelLogic {
             MarvelEndpoint::class.java
         )
 
-        if(call != null){
+        if (call != null) {
             val response = call.getCharactersStartWith(name, limit)
 
-            if(response.isSuccessful){
-                response.body()!!.data.results.forEach(){
+            if (response.isSuccessful) {
+                response.body()!!.data.results.forEach() {
 
                     val m = it.getMarvelChars()
                     itemList.add(m)
                 }
-            }else{
+            } else {
                 Log.d("UCE", response.toString())
             }
         }
@@ -39,7 +41,7 @@ class MarvelLogic {
     }
 
 
-    suspend fun getAllMarvelChars(offset: Int, limit:Int):ArrayList<MarvelChars>{
+    suspend fun getAllMarvelChars(offset: Int, limit: Int): ArrayList<MarvelChars> {
 
         var itemList = arrayListOf<MarvelChars>()
         val call = ApiConnection.getService(
@@ -47,20 +49,20 @@ class MarvelLogic {
             MarvelEndpoint::class.java
         )
 
-        if(call != null){
+        if (call != null) {
 //            val response =
 //                call.getCharactersStartWith(offset, limit)
 
             val response =
                 call.getAllMarvelChars(offset, limit)
 
-            if(response.isSuccessful){
-                response.body()!!.data.results.forEach(){
+            if (response.isSuccessful) {
+                response.body()!!.data.results.forEach() {
 
                     val m = it.getMarvelChars()
                     itemList.add(m)
                 }
-            }else{
+            } else {
                 Log.d("UCE", response.toString())
             }
         }
@@ -69,11 +71,11 @@ class MarvelLogic {
 
     }
 
-    suspend fun getAllMarvelCharDb() : List<MarvelChars>{
+    suspend fun getAllMarvelCharDb(): List<MarvelChars> {
 
         var items: ArrayList<MarvelChars> = arrayListOf()
         val itemsAux = DispositivosMoviles.getDbInstance().marvelDao().getAllCharacters()
-        itemsAux.forEach{
+        itemsAux.forEach {
             items.add(
                 it.getMarvelChars()
             )
@@ -82,9 +84,30 @@ class MarvelLogic {
         return items
     }
 
-    suspend fun insertMarvelCharstoDB(items: List<MarvelChars>){
+    suspend fun getInitChars(limit: Int, offset: Int): MutableList<MarvelChars> {
+        var items = mutableListOf<MarvelChars>()
+        try {
+            items = MarvelLogic()
+                .getAllMarvelCharDb()
+                .toMutableList()
+
+            if (items.isEmpty()) {
+                items = (MarvelLogic().getAllMarvelChars
+                    (offset = offset,limit = limit))
+                MarvelLogic().insertMarvelCharstoDB(items)
+            }
+            return items
+
+        } catch (ex: Exception) {
+            throw RuntimeException(ex.message)
+        }
+
+        return items
+    }
+
+    suspend fun insertMarvelCharstoDB(items: List<MarvelChars>) {
         var itemsDB = arrayListOf<MarvelCharsDB>()
-        items.forEach{
+        items.forEach {
             itemsDB.add(it.getMarvelCharsDB())
         }
 
@@ -92,8 +115,6 @@ class MarvelLogic {
             .getDbInstance()
             .marvelDao()
             .insertMarvelChar(itemsDB)
-
-
     }
 
 
