@@ -63,13 +63,14 @@
                 app:layout_constraintVertical_bias="0.115"
                 tools:text="Marvel" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/btnSave"
-                android:layout_width="100dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:background="@color/text_buton_datos"
-                android:drawableLeft="@drawable/favorite_48px">
-            </Button>
+                android:src="@drawable/favorite_48px"
+                android:scaleType="fitCenter"
+                />
 
 
         </LinearLayout>

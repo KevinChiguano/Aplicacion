@@ -12,10 +12,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dispositivosmoviles.R
-import com.example.dispositivosmoviles.data.entities.marvel.characters.database.MarvelCharsDB
+import com.example.dispositivosmoviles.data.entities.marvel.characters.database.MarvelFavoriteCharsDB
 import com.example.dispositivosmoviles.logic.data.MarvelChars
 import com.example.dispositivosmoviles.databinding.FragmentFirstBinding
-import com.example.dispositivosmoviles.logic.data.getMarvelCharsDB
 import com.example.dispositivosmoviles.logic.marvelLogic.MarvelLogic
 import com.example.dispositivosmoviles.ui.activities.DatailsMarvelItem
 import com.example.dispositivosmoviles.ui.adapters.MarvelAdapter
@@ -138,12 +137,31 @@ class FirstFragment : Fragment() {
     }
 
     fun saveMarvelItem(item: MarvelChars):Boolean {
-        lifecycleScope.launch(Dispatchers.Main){
-            withContext(Dispatchers.IO){
-                DispositivosMoviles
-                    .getDbInstance()
-                    .marvelDao()
-                    .insertMarvelChar(listOf( item.getMarvelCharsDB()))
+        val marvelSavedChar = MarvelFavoriteCharsDB(
+            id = item.id,
+            name = item.name,
+            comic = item.comic,
+            image = item.image
+        )
+
+        val dao = DispositivosMoviles
+            .getDbInstance()
+            .marvelFavoriteDao()
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            val exist = dao.getOneCharacters(item.id)
+            if(exist != null){
+                dao.deleteMarvelChar(exist)
+                Snackbar.make(
+                    binding.cardView,
+                    "Se elimino de favoritos",
+                    Snackbar.LENGTH_LONG).show()
+            }else{
+                dao.insertMarvelChar(marvelSavedChar)
+                Snackbar.make(
+                    binding.cardView,
+                    "Se agrego a favoritos",
+                    Snackbar.LENGTH_LONG).show()
             }
         }
         return false

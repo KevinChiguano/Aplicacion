@@ -41,6 +41,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btn_guardar"
             android:layout_width="62dp"
             android:layout_height="62dp"
 
