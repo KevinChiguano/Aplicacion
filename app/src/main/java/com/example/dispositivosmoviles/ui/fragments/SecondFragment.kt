@@ -2,6 +2,7 @@ package com.example.dispositivosmoviles.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -20,16 +21,18 @@ import com.example.dispositivosmoviles.logic.data.getMarvelCharsDB
 import com.example.dispositivosmoviles.logic.marvelLogic.MarvelLogic
 import com.example.dispositivosmoviles.ui.activities.DatailsMarvelItem
 import com.example.dispositivosmoviles.ui.adapters.MarvelAdapter
+import com.example.dispositivosmoviles.ui.data.UserDataStore
 import com.example.dispositivosmoviles.ui.utilities.DispositivosMoviles
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
 class SecondFragment : Fragment() {
 
-    private lateinit var binding : FragmentSecondBinding
+    private lateinit var binding: FragmentSecondBinding
 
     private lateinit var lManager: LinearLayoutManager
 
@@ -48,7 +51,8 @@ class SecondFragment : Fragment() {
 
 
         binding = FragmentSecondBinding.inflate(
-            layoutInflater, container, false)
+            layoutInflater, container, false
+        )
 
         //da la disposicion de orientacion
         //sabe cuantos elementos han pasado
@@ -58,7 +62,7 @@ class SecondFragment : Fragment() {
             false
         )
 
-        gManager = GridLayoutManager(requireActivity(),2)
+        gManager = GridLayoutManager(requireActivity(), 2)
 
         // Inflate the layout for this fragment
         return binding.root
@@ -66,6 +70,15 @@ class SecondFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
+
+        lifecycleScope.launch(Dispatchers.Main) {
+            getDataStore()
+                .collect { user ->
+                    Log.d("UCE", user.email)
+                    Log.d("UCE", user.name)
+                    Log.d("UCE", user.session)
+                }
+        }
 
         val names = arrayListOf<String>("Carlos", "Xavier", "Andrés", "Pepe", "Mariano", "Rosa")
 
@@ -83,7 +96,7 @@ class SecondFragment : Fragment() {
         binding.rvSwipe.setOnRefreshListener {
             chargeDataRV("")
             binding.rvSwipe.isRefreshing = false
-            gManager.scrollToPositionWithOffset(5,20)
+            gManager.scrollToPositionWithOffset(5, 20)
         }
 
         binding.rvMarvelChars.addOnScrollListener(
@@ -103,7 +116,7 @@ class SecondFragment : Fragment() {
                         if ((v + p) >= t) {
                             lifecycleScope.launch(Dispatchers.IO) {
                                 //val newItems = JikanAnimeLogic().getAllAnimes()
-                                val newItems = MarvelLogic().getMarvelChars(filterText,99)
+                                val newItems = MarvelLogic().getMarvelChars(filterText, 99)
 
                                 withContext(Dispatchers.Main) {
                                     rvAdapter.updateListItem(newItems)
@@ -127,13 +140,13 @@ class SecondFragment : Fragment() {
 
     //cambiar de activity desde un fragment
     //esta funcion lleva contenido o informacion
-    fun sendMarvelItem(item: MarvelChars){
+    fun sendMarvelItem(item: MarvelChars) {
         val i = Intent(requireActivity(), DatailsMarvelItem::class.java)
         i.putExtra("name", item)
         startActivity(i)
     }
 
-    fun saveMarvelItem(item: MarvelChars):Boolean {
+    fun saveMarvelItem(item: MarvelChars): Boolean {
         val marvelSavedChar = MarvelFavoriteCharsDB(
             id = item.id,
             name = item.name,
@@ -147,18 +160,20 @@ class SecondFragment : Fragment() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             val exist = dao.getOneCharacters(item.id)
-            if(exist != null){
+            if (exist != null) {
                 dao.deleteMarvelChar(exist)
                 Snackbar.make(
                     binding.cardView,
                     "Se elimino de favoritos",
-                    Snackbar.LENGTH_LONG).show()
-            }else{
+                    Snackbar.LENGTH_LONG
+                ).show()
+            } else {
                 dao.insertMarvelChar(marvelSavedChar)
                 Snackbar.make(
                     binding.cardView,
                     "Se agrego a favoritos",
-                    Snackbar.LENGTH_LONG).show()
+                    Snackbar.LENGTH_LONG
+                ).show()
             }
         }
         return false
@@ -166,27 +181,36 @@ class SecondFragment : Fragment() {
 
 
     //cambios
-    fun chargeDataRV(name: String){
+    fun chargeDataRV(name: String) {
 
         lifecycleScope.launch(Dispatchers.Main) {
 
-            marvelCharsItems = withContext(Dispatchers.IO){
-                return@withContext (MarvelLogic().getMarvelChars(name,99))
+            marvelCharsItems = withContext(Dispatchers.IO) {
+                return@withContext (MarvelLogic().getMarvelChars(name, 99))
             }
 
             rvAdapter = MarvelAdapter(
                 marvelCharsItems,
-                fnClick = { sendMarvelItem(it)},
-                fnSave = {saveMarvelItem(it)}
+                fnClick = { sendMarvelItem(it) },
+                fnSave = { saveMarvelItem(it) }
             )
 
-            binding.rvMarvelChars.apply{
+            binding.rvMarvelChars.apply {
                 this.adapter = rvAdapter
                 this.layoutManager = gManager
             }
         }
     }
 
+    private fun getDataStore() =
+
+        requireActivity().dataStore.data.map { prefs ->
+            UserDataStore(
+                name = prefs[stringPreferencesKey("usuario")].orEmpty(),
+                email = prefs[stringPreferencesKey("email")].orEmpty(),
+                session = prefs[stringPreferencesKey("session")].orEmpty()
+            )
+        }
 
 
 }

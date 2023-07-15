@@ -79,4 +79,6 @@ dependencies {
     // To use Kotlin annotation processing tool (kapt)
     kapt "androidx.room:room-compiler:2.5.0"
 
+    implementation("androidx.datastore:datastore:1.0.0")
+
 }

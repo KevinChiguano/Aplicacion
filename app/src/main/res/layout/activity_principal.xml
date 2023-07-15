@@ -7,6 +7,7 @@
     tools:context=".ui.activities.PrincipalActivity">
 
 
+
     <TextView
         android:id="@+id/textName"
         style="@style/textTitle"
