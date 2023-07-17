@@ -1,5 +1,6 @@
 package com.example.dispositivosmoviles.ui.fragments
 
+
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.core.widget.addTextChangedListener
+
+import androidx.datastore.preferences.core.stringPreferencesKey
+
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,9 +21,9 @@ import com.example.dispositivosmoviles.R
 import com.example.dispositivosmoviles.data.entities.marvel.characters.database.MarvelFavoriteCharsDB
 import com.example.dispositivosmoviles.databinding.FragmentSecondBinding
 import com.example.dispositivosmoviles.logic.data.MarvelChars
-import com.example.dispositivosmoviles.logic.data.getMarvelCharsDB
 import com.example.dispositivosmoviles.logic.marvelLogic.MarvelLogic
 import com.example.dispositivosmoviles.ui.activities.DatailsMarvelItem
+import com.example.dispositivosmoviles.ui.activities.LoginActivity
 import com.example.dispositivosmoviles.ui.adapters.MarvelAdapter
 import com.example.dispositivosmoviles.ui.data.UserDataStore
 import com.example.dispositivosmoviles.ui.utilities.DispositivosMoviles
@@ -28,6 +32,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.map
 
 
 class SecondFragment : Fragment() {
@@ -43,6 +48,7 @@ class SecondFragment : Fragment() {
     private lateinit var gManager: GridLayoutManager
 
     private var filterText: String = ""
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -71,14 +77,14 @@ class SecondFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-        lifecycleScope.launch(Dispatchers.Main) {
-            getDataStore()
-                .collect { user ->
-                    Log.d("UCE", user.email)
-                    Log.d("UCE", user.name)
-                    Log.d("UCE", user.session)
-                }
-        }
+//        lifecycleScope.launch(Dispatchers.Main) {
+//            getDataStore()
+//                .collect { user ->
+//                    Log.d("UCE", user.email)
+//                    Log.d("UCE", user.name)
+//                    Log.d("UCE", user.session)
+//                }
+//        }
 
         val names = arrayListOf<String>("Carlos", "Xavier", "Andrés", "Pepe", "Mariano", "Rosa")
 
@@ -202,15 +208,14 @@ class SecondFragment : Fragment() {
         }
     }
 
-    private fun getDataStore() =
-
-        requireActivity().dataStore.data.map { prefs ->
-            UserDataStore(
-                name = prefs[stringPreferencesKey("usuario")].orEmpty(),
-                email = prefs[stringPreferencesKey("email")].orEmpty(),
-                session = prefs[stringPreferencesKey("session")].orEmpty()
-            )
-        }
+//    private fun getDataStore(): Flow<UserDataStore> =
+//        requireActivity().dataStore.data.map { prefs ->
+//            UserDataStore(
+//                name = prefs[stringPreferencesKey("usuario")].orEmpty(),
+//                email = prefs[stringPreferencesKey("email")].orEmpty(),
+//                session = prefs[stringPreferencesKey("session")].orEmpty()
+//            )
+//        }
 
 
 }

@@ -3,12 +3,17 @@ package com.example.dispositivosmoviles.ui.activities
 
 
 
+
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+
 
 import androidx.lifecycle.lifecycleScope
 
@@ -46,7 +51,10 @@ class LoginActivity : AppCompatActivity() {
 
         binding.btnIngresar.setOnClickListener {
 
-            val check = LoginValidator().checkLogin(binding.txtNombre.text.toString(),binding.txtContasena.text.toString())
+            val check = LoginValidator().checkLogin(
+                binding.txtNombre.text.toString(),
+                binding.txtContasena.text.toString()
+            )
 
             if(check){
 
@@ -73,13 +81,11 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    private suspend fun saveDataStore(stringData: String){
-        dataStore.edit{ prefs ->
-
+    private suspend fun saveDataStore(stringData: String) {
+        dataStore.edit { prefs ->
             prefs[stringPreferencesKey("usuario")] = stringData
             prefs[stringPreferencesKey("session")] = UUID.randomUUID().toString()
-            prefs[stringPreferencesKey("email")] = "dispositivosmoviles@uce.edu.ec"
-
+            prefs[stringPreferencesKey("email")] = "dimoviles@uce.edu.ec"
         }
     }
 
