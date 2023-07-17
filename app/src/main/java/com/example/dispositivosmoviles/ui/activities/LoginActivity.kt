@@ -25,17 +25,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.UUID
 
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+
 
 class LoginActivity : AppCompatActivity() {
 
-    // At the top level of your kotlin file:
-    val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
-
-
     private lateinit var binding: ActivityLoginBinding
-
-    // At the top level of your kotlin file:
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

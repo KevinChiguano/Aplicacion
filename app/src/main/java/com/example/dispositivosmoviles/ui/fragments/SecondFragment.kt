@@ -24,6 +24,7 @@ import com.example.dispositivosmoviles.logic.data.MarvelChars
 import com.example.dispositivosmoviles.logic.marvelLogic.MarvelLogic
 import com.example.dispositivosmoviles.ui.activities.DatailsMarvelItem
 import com.example.dispositivosmoviles.ui.activities.LoginActivity
+import com.example.dispositivosmoviles.ui.activities.dataStore
 import com.example.dispositivosmoviles.ui.adapters.MarvelAdapter
 import com.example.dispositivosmoviles.ui.data.UserDataStore
 import com.example.dispositivosmoviles.ui.utilities.DispositivosMoviles
@@ -77,14 +78,14 @@ class SecondFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-//        lifecycleScope.launch(Dispatchers.Main) {
-//            getDataStore()
-//                .collect { user ->
-//                    Log.d("UCE", user.email)
-//                    Log.d("UCE", user.name)
-//                    Log.d("UCE", user.session)
-//                }
-//        }
+        lifecycleScope.launch(Dispatchers.Main) {
+            getDataStore()
+                .collect { user ->
+                    Log.d("UCE", user.email)
+                    Log.d("UCE", user.name)
+                    Log.d("UCE", user.session)
+                }
+        }
 
         val names = arrayListOf<String>("Carlos", "Xavier", "Andrés", "Pepe", "Mariano", "Rosa")
 
@@ -208,14 +209,14 @@ class SecondFragment : Fragment() {
         }
     }
 
-//    private fun getDataStore(): Flow<UserDataStore> =
-//        requireActivity().dataStore.data.map { prefs ->
-//            UserDataStore(
-//                name = prefs[stringPreferencesKey("usuario")].orEmpty(),
-//                email = prefs[stringPreferencesKey("email")].orEmpty(),
-//                session = prefs[stringPreferencesKey("session")].orEmpty()
-//            )
-//        }
+    private fun getDataStore(): Flow<UserDataStore> =
+        requireActivity().dataStore.data.map { prefs ->
+            UserDataStore(
+                name = prefs[stringPreferencesKey("usuario")].orEmpty(),
+                email = prefs[stringPreferencesKey("email")].orEmpty(),
+                session = prefs[stringPreferencesKey("session")].orEmpty()
+            )
+        }
 
 
 }
