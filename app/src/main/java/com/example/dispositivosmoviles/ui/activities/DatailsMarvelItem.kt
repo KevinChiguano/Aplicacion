@@ -20,8 +20,6 @@ class DatailsMarvelItem : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_datails_marvel_item)
-
         binding = ActivityDatailsMarvelItemBinding.inflate(layoutInflater)
         setContentView(binding.root)
     }

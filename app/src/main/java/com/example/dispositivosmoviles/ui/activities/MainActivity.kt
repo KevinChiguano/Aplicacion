@@ -14,13 +14,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        //crea los objetos o a inflar
-        //layoutInflater -> Se crean objetos asociados
-        //Inicializa el binding
         binding = ActivityMainBinding.inflate(layoutInflater)
-
-        //Poner los objetos en la clase
         setContentView(binding.root)
 
     }

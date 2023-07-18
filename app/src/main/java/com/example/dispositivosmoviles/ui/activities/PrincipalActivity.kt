@@ -20,12 +20,8 @@ class PrincipalActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_principal)
         Log.d("UCE","Entrada a Create")
-        //Inicializa el binding
         binding = ActivityPrincipalBinding.inflate(layoutInflater)
-
-        //Poner los objetos en la clase
         setContentView(binding.root)
     }
 
