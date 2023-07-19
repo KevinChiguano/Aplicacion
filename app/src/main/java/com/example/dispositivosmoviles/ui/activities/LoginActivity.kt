@@ -4,9 +4,11 @@ package com.example.dispositivosmoviles.ui.activities
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.speech.RecognizerIntent
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.*
@@ -25,6 +27,7 @@ import com.example.dispositivosmoviles.logic.validator.LoginValidator
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.Locale
 import java.util.UUID
 
 
@@ -89,41 +92,100 @@ class LoginActivity : AppCompatActivity() {
                 "com.google.android.googlequicksearchbox",
                 "com.google.android.googlequicksearchbox.SearchActivity"
             )
-            intent.putExtra(SearchManager.QUERY, "Anime")
+            intent.putExtra(SearchManager.QUERY, "Anime Fenix")
             startActivity(intent)
         }
 
         val appResultLocal = registerForActivityResult(StartActivityForResult()) { resultActivity ->
 
+            val sn = Snackbar.make(
+                binding.textView, "",
+                Snackbar.LENGTH_LONG
+            )
+
             //contrato
-            when (resultActivity.resultCode) {
+            var message = when (resultActivity.resultCode) {
                 RESULT_OK -> {
-                    Snackbar.make(
-                        binding.textView, "Resultado exitos",
-                        Snackbar.LENGTH_LONG
-                    ).show()
+                    sn.setBackgroundTint(resources.getColor(R.color.blue))
+                    resultActivity.data?.getStringExtra("result")
+                        .orEmpty()
                 }
 
                 RESULT_CANCELED -> {
-                    Snackbar.make(
-                        binding.textView, "Resultado fallido",
-                        Snackbar.LENGTH_LONG
-                    ).show()
+                    sn.setBackgroundTint(resources.getColor(R.color.naranja))
+                    resultActivity.data?.getStringExtra("result")
+                        .orEmpty()
                 }
 
                 else -> {
-                    Snackbar.make(
-                        binding.textView, "Resultado extraño",
-                        Snackbar.LENGTH_LONG
-                    ).show()
+                    "Dudoso"
                 }
             }
 
+            sn.setText(message)
+            sn.show()
+
+        }
+
+        val speechToText = registerForActivityResult(StartActivityForResult()) { activityResult ->
+            val sn = Snackbar.make(
+                binding.textView, "",
+                Snackbar.LENGTH_LONG
+            )
+            var message = ""
+            when (activityResult.resultCode) {
+                RESULT_OK -> {
+                    val msg = activityResult
+                        .data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.get(0)
+                        .toString()
+
+                    if(msg.isNotEmpty()){
+                        val intent = Intent(
+                            Intent.ACTION_WEB_SEARCH
+                        )
+                        intent.setClassName(
+                            "com.google.android.googlequicksearchbox",
+                            "com.google.android.googlequicksearchbox.SearchActivity"
+                        )
+                        Log.d("UCE",msg)
+                        intent.putExtra(SearchManager.QUERY, msg.toString())
+                        startActivity(intent)
+                    }
+                }
+                RESULT_CANCELED -> {
+                    message = "Proceso cancelado"
+                    sn.setBackgroundTint(resources.getColor(R.color.naranja))
+                }
+
+                else -> {
+                    message = "Ocurrio un error"
+                    sn.setBackgroundTint(resources.getColor(R.color.naranja))
+                }
+            }
+
+            sn.setText(message)
+            sn.show()
         }
 
         binding.btnResult.setOnClickListener {
-            val resIntent = Intent(this, ResultActivity::class.java)
-            appResultLocal.launch(resIntent)
+//            val resIntent = Intent(this, ResultActivity::class.java)
+//            appResultLocal.launch(resIntent)
+
+            val intentSpeech = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+            intentSpeech.putExtra(
+                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+
+            )
+            intentSpeech.putExtra(
+                RecognizerIntent.EXTRA_LANGUAGE,
+                Locale.getDefault()
+            )
+            intentSpeech.putExtra(
+                RecognizerIntent.EXTRA_PROMPT,
+                "Di algo....."
+            )
+            speechToText.launch(intentSpeech)
 
         }
 
