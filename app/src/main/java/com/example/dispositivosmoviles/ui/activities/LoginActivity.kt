@@ -1,10 +1,13 @@
 package com.example.dispositivosmoviles.ui.activities
 
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.location.Geocoder
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -12,6 +15,7 @@ import android.speech.RecognizerIntent
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.*
+import androidx.core.content.PermissionChecker.PermissionResult
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -24,6 +28,9 @@ import androidx.lifecycle.lifecycleScope
 import com.example.dispositivosmoviles.R
 import com.example.dispositivosmoviles.databinding.ActivityLoginBinding
 import com.example.dispositivosmoviles.logic.validator.LoginValidator
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,16 +40,21 @@ import java.util.UUID
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
+
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
     }
 
+    @SuppressLint("MissingPermission")
     override fun onStart() {
         super.onStart()
 
@@ -79,21 +91,73 @@ class LoginActivity : AppCompatActivity() {
 
         }
 
-        binding.btnSearch.setOnClickListener {
-//            val intent = Intent(Intent.ACTION_VIEW,
-//                //Uri.parse("https://www.google.com.ec/maps")
-//                Uri.parse("tel:0123456789")
-//            )
+        val locationContract = registerForActivityResult(RequestPermission()) { isGranted ->
+            when (isGranted == true) {
+                true -> {
+//                    val task = fusedLocationProviderClient.lastLocation
+//                    task.addOnSuccessListener {
+//                        if (task.result != null) {
+//                            Snackbar.make(
+//                                binding.textView,
+//                                "${it.latitude}, ${it.longitude}",
+//                                Snackbar.LENGTH_LONG
+//                            ).show()
+//                        } else {
+//                            Snackbar.make(
+//                                binding.textView,
+//                                "Encienda el GPS por favor",
+//                                Snackbar.LENGTH_LONG
+//                            ).show()
+//                        }
+//                    }
 
-            val intent = Intent(
-                Intent.ACTION_WEB_SEARCH
-            )
-            intent.setClassName(
-                "com.google.android.googlequicksearchbox",
-                "com.google.android.googlequicksearchbox.SearchActivity"
-            )
-            intent.putExtra(SearchManager.QUERY, "Anime Fenix")
-            startActivity(intent)
+                    fusedLocationProviderClient.lastLocation.addOnSuccessListener {
+                        it.longitude
+                        it.latitude
+                        val a = Geocoder(this)
+                        a.getFromLocation(it.latitude,it.longitude,1)
+
+                    }
+
+                }
+
+                shouldShowRequestPermissionRationale(
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) -> {
+                    Snackbar.make(
+                        binding.textView,
+                        "Ayude con el permiso porfa",
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                }
+
+
+                false -> {
+                }
+
+                else -> {
+                    Snackbar.make(binding.textView, "Permiso Denegado", Snackbar.LENGTH_LONG).show()
+                }
+            }
+
+        }
+
+        binding.btnTwitter.setOnClickListener {
+
+            locationContract.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+
+
+//            val intent = Intent(
+//                Intent.ACTION_WEB_SEARCH
+//            )
+//            intent.setClassName(
+//                "com.google.android.googlequicksearchbox",
+//                "com.google.android.googlequicksearchbox.SearchActivity"
+//            )
+//            intent.putExtra(SearchManager.QUERY, "Anime Fenix")
+//            startActivity(intent)
+
+
         }
 
         val appResultLocal = registerForActivityResult(StartActivityForResult()) { resultActivity ->
@@ -112,7 +176,7 @@ class LoginActivity : AppCompatActivity() {
                 }
 
                 RESULT_CANCELED -> {
-                    sn.setBackgroundTint(resources.getColor(R.color.naranja))
+                    sn.setBackgroundTint(resources.getColor(R.color.rojo))
                     resultActivity.data?.getStringExtra("result")
                         .orEmpty()
                 }
@@ -139,7 +203,7 @@ class LoginActivity : AppCompatActivity() {
                         .data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.get(0)
                         .toString()
 
-                    if(msg.isNotEmpty()){
+                    if (msg.isNotEmpty()) {
                         val intent = Intent(
                             Intent.ACTION_WEB_SEARCH
                         )
@@ -147,19 +211,20 @@ class LoginActivity : AppCompatActivity() {
                             "com.google.android.googlequicksearchbox",
                             "com.google.android.googlequicksearchbox.SearchActivity"
                         )
-                        Log.d("UCE",msg)
+                        Log.d("UCE", msg)
                         intent.putExtra(SearchManager.QUERY, msg.toString())
                         startActivity(intent)
                     }
                 }
+
                 RESULT_CANCELED -> {
                     message = "Proceso cancelado"
-                    sn.setBackgroundTint(resources.getColor(R.color.naranja))
+                    sn.setBackgroundTint(resources.getColor(R.color.rojo))
                 }
 
                 else -> {
                     message = "Ocurrio un error"
-                    sn.setBackgroundTint(resources.getColor(R.color.naranja))
+                    sn.setBackgroundTint(resources.getColor(R.color.rojo))
                 }
             }
 
