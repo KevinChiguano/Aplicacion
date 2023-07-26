@@ -14,6 +14,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
+import android.provider.Settings
 import android.speech.RecognizerIntent
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
@@ -32,12 +33,17 @@ import androidx.lifecycle.lifecycleScope
 import com.example.dispositivosmoviles.R
 import com.example.dispositivosmoviles.databinding.ActivityLoginBinding
 import com.example.dispositivosmoviles.logic.validator.LoginValidator
+import com.example.dispositivosmoviles.ui.utilities.MyLocationManager
+import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.LocationSettingsStatusCodes
 import com.google.android.gms.location.Priority
+import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
@@ -52,91 +58,89 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "se
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
+    //Ubicacion y GPS
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private lateinit var locationRequest : LocationRequest
+    private lateinit var locationRequest: LocationRequest
     private lateinit var locationCallBack: LocationCallback
+    private lateinit var client : SettingsClient
+    private lateinit var locationSettingRequest : LocationSettingsRequest
 
-    private var currentLocation : Location? = null
 
-    private val speechToText = registerForActivityResult(StartActivityForResult()) { activityResult ->
-        val sn = Snackbar.make(
-            binding.textView, "",
-            Snackbar.LENGTH_LONG
-        )
-        var message = ""
-        when (activityResult.resultCode) {
-            RESULT_OK -> {
-                val msg = activityResult
-                    .data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.get(0)
-                    .toString()
+    private var currentLocation: Location? = null
 
-                if (msg.isNotEmpty()) {
-                    val intent = Intent(
-                        Intent.ACTION_WEB_SEARCH
-                    )
-                    intent.setClassName(
-                        "com.google.android.googlequicksearchbox",
-                        "com.google.android.googlequicksearchbox.SearchActivity"
-                    )
-                    Log.d("UCE", msg)
-                    intent.putExtra(SearchManager.QUERY, msg.toString())
-                    startActivity(intent)
+    private val speechToText =
+        registerForActivityResult(StartActivityForResult()) { activityResult ->
+            val sn = Snackbar.make(
+                binding.textView, "",
+                Snackbar.LENGTH_LONG
+            )
+            var message = ""
+            when (activityResult.resultCode) {
+                RESULT_OK -> {
+                    val msg = activityResult
+                        .data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)?.get(0)
+                        .toString()
+
+                    if (msg.isNotEmpty()) {
+                        val intent = Intent(
+                            Intent.ACTION_WEB_SEARCH
+                        )
+                        intent.setClassName(
+                            "com.google.android.googlequicksearchbox",
+                            "com.google.android.googlequicksearchbox.SearchActivity"
+                        )
+                        Log.d("UCE", msg)
+                        intent.putExtra(SearchManager.QUERY, msg.toString())
+                        startActivity(intent)
+                    }
+                }
+
+                RESULT_CANCELED -> {
+                    message = "Proceso cancelado"
+                    sn.setBackgroundTint(resources.getColor(R.color.rojo))
+                }
+
+                else -> {
+                    message = "Ocurrio un error"
+                    sn.setBackgroundTint(resources.getColor(R.color.rojo))
                 }
             }
 
-            RESULT_CANCELED -> {
-                message = "Proceso cancelado"
-                sn.setBackgroundTint(resources.getColor(R.color.rojo))
-            }
-
-            else -> {
-                message = "Ocurrio un error"
-                sn.setBackgroundTint(resources.getColor(R.color.rojo))
-            }
+            sn.setText(message)
+            sn.show()
         }
-
-        sn.setText(message)
-        sn.show()
-    }
 
     @SuppressLint("MissingPermission")
     private val locationContract = registerForActivityResult(RequestPermission()) { isGranted ->
         when (isGranted == true) {
             true -> {
 
-                val task = fusedLocationProviderClient.lastLocation
-
-                task.addOnSuccessListener { location ->
-                    val alert = AlertDialog.Builder(
-                        this
-                    )
-                    alert.apply {
-                        setTitle("Alerta")
-                        setMessage("Existe un problema con el sistema de posicionamiento global en el sistema")
-                        setPositiveButton("Ok"){dialog, id ->
-                            dialog.dismiss()
-                        }.create()
-                        alert.show()
-
-                        setNegativeButton("Cancelar"){dialog, id->
-                            dialog.dismiss()
-                        }.create()
-                        alert.show()
-
-                        setCancelable(false)
-
-                    fusedLocationProviderClient.requestLocationUpdates(
-                        locationRequest,
-                        locationCallBack,
-                        Looper.getMainLooper()
-                    )
-                }
-
-                task.addOnFailureListener {
+                client.checkLocationSettings(locationSettingRequest).apply {
+                    addOnSuccessListener {
+                        val task = fusedLocationProviderClient.lastLocation
+                        task.addOnSuccessListener { location ->
+                            fusedLocationProviderClient.requestLocationUpdates(
+                                locationRequest,
+                                locationCallBack,
+                                Looper.getMainLooper()
+                            )
+                        }
+                    }
+                    addOnFailureListener{ex ->
+                        if(ex is ResolvableApiException){
+                            //startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))
+                            ex.startResolutionForResult(
+                                this@LoginActivity,
+                                LocationSettingsStatusCodes.RESOLUTION_REQUIRED
+                            )
+                        }
 
                     }
                 }
+
+
             }
+
             shouldShowRequestPermissionRationale(
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) -> {
@@ -146,8 +150,10 @@ class LoginActivity : AppCompatActivity() {
                     Snackbar.LENGTH_LONG
                 ).show()
             }
+
             false -> {
             }
+
             else -> {
                 Snackbar.make(binding.textView, "Permiso Denegado", Snackbar.LENGTH_LONG).show()
             }
@@ -161,28 +167,37 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+
+
+
         locationRequest = LocationRequest.Builder(
             Priority.PRIORITY_HIGH_ACCURACY,
-            2000
+            1000
         )
             .setMaxUpdates(3)
             .build()
 
-        locationCallBack = object : LocationCallback(){
+        locationCallBack = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 super.onLocationResult(locationResult)
 
-                if(locationResult != null){
-                    locationResult.locations.forEach{location ->
+                if (locationResult != null) {
+                    locationResult.locations.forEach { location ->
                         currentLocation = location
                         Log.d(
                             "UCE", "Ubicacion: ${location.latitude}," +
-                                "${location.longitude}"
+                                    "${location.longitude}"
                         )
                     }
+                } else {
+                    Log.d("UCE", "GPS apagado")
                 }
             }
         }
+        client = LocationServices.getSettingsClient(this)
+
+        locationSettingRequest = LocationSettingsRequest.Builder()
+            .addLocationRequest(locationRequest).build()
     }
 
     override fun onStart() {
@@ -299,5 +314,10 @@ class LoginActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         fusedLocationProviderClient.removeLocationUpdates(locationCallBack)
+    }
+
+    private fun test(){
+        var location = MyLocationManager(this)
+        location.getUserLocation()
     }
 }
