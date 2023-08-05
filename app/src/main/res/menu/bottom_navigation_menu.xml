@@ -11,13 +11,13 @@
     <item
         android:id="@+id/favoritos"
         android:enabled="true"
-        android:icon="@drawable/favorite_48px"
+        android:icon="@drawable/search_24"
         android:title="@string/menu_favorito"
         android:visible="true" />
     <item
         android:id="@+id/apis"
         android:enabled="true"
-        android:icon="@drawable/api_48px"
+        android:icon="@drawable/favorite_48px"
         android:title="@string/menu_apis"
         android:visible="true" />
 </menu>
