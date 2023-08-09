@@ -17,6 +17,7 @@ import android.os.Looper
 import android.provider.Settings
 import android.speech.RecognizerIntent
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.*
 import androidx.appcompat.app.AlertDialog
@@ -45,7 +46,11 @@ import com.google.android.gms.location.LocationSettingsStatusCodes
 import com.google.android.gms.location.Priority
 import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.tasks.Task
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Locale
@@ -64,6 +69,10 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var locationCallBack: LocationCallback
     private lateinit var client : SettingsClient
     private lateinit var locationSettingRequest : LocationSettingsRequest
+
+    private lateinit var auth: FirebaseAuth
+
+
 
 
     private var currentLocation: Location? = null
@@ -198,6 +207,87 @@ class LoginActivity : AppCompatActivity() {
 
         locationSettingRequest = LocationSettingsRequest.Builder()
             .addLocationRequest(locationRequest).build()
+
+        auth = Firebase.auth
+
+
+        binding.btnIngresar.setOnClickListener {
+            authWithFirebaseEmail(
+                binding.txtNombre.text.toString(),
+                binding.txtContasena.text.toString()
+            )
+
+            signInWithEmailAndPassword(
+                binding.txtNombre.text.toString(),
+                binding.txtContasena.text.toString()
+            )
+        }
+
+    }
+
+    private fun authWithFirebaseEmail(email: String, password: String) {
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(Constants.TAG, "createUserWithEmail:success")
+                    val user = auth.currentUser
+                    Toast.makeText(
+                        baseContext,
+                        "Authentication success.",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w(Constants.TAG, "createUserWithEmail:failure", task.exception)
+                    Toast.makeText(
+                        baseContext,
+                        "Authentication failed.",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                }
+            }
+    }
+
+    private fun signInWithEmailAndPassword(email: String, password: String){
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(Constants.TAG, "signInWithEmail:success")
+                    val user = auth.currentUser
+                    startActivity(Intent(this, BiometricActivity::class.java))
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w(Constants.TAG, "signInWithEmail:failure", task.exception)
+                    Toast.makeText(
+                        baseContext,
+                        "Authentication failed.",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+
+                }
+            }
+    }
+
+    private fun recoveryPasswordWithEmail(email: String){
+        auth.sendPasswordResetEmail(email)
+            .addOnCompleteListener {task ->
+                if(task.isSuccessful){
+                    Toast.makeText(
+                        this,
+                        "Correo de recuperacio enviado correctamente",
+                        Toast.LENGTH_SHORT,
+                    ).show()
+
+                    MaterialAlertDialogBuilder(this).apply {
+                        setTitle("Alert")
+                        setMessage("Correo de recuperacion enviado correctamente")
+                        setCancelable(true)
+                    }
+                }
+
+            }
     }
 
     override fun onStart() {
@@ -205,34 +295,38 @@ class LoginActivity : AppCompatActivity() {
 
         binding.btnIngresar.setOnClickListener {
 
-            val check = LoginValidator().checkLogin(
-                binding.txtNombre.text.toString(),
-                binding.txtContasena.text.toString()
+//            val check = LoginValidator().checkLogin(
+//                binding.txtNombre.text.toString(),
+//                binding.txtContasena.text.toString()
+//            )
+//
+//            if (check) {
+//
+//                lifecycleScope.launch(Dispatchers.IO) {
+//                    saveDataStore(binding.txtNombre.text.toString())
+//                }
+//
+//                var intent = Intent(
+//                    this,
+//                    PrincipalActivity::class.java
+//                )
+//
+//                intent.putExtra("var1", binding.txtNombre.text.toString())
+//
+//                startActivity(intent)
+//
+//
+//            } else {
+//                Snackbar.make(
+//                    binding.txtNombre,
+//                    "Usuario o contraseña invalidos",
+//                    Snackbar.LENGTH_LONG
+//                ).show()
+//            }
+
+            recoveryPasswordWithEmail(
+                binding.txtNombre.text.toString()
             )
-
-            if (check) {
-
-                lifecycleScope.launch(Dispatchers.IO) {
-                    saveDataStore(binding.txtNombre.text.toString())
-                }
-
-                var intent = Intent(
-                    this,
-                    PrincipalActivity::class.java
-                )
-
-                intent.putExtra("var1", binding.txtNombre.text.toString())
-
-                startActivity(intent)
-
-
-            } else {
-                Snackbar.make(
-                    binding.txtNombre,
-                    "Usuario o contraseña invalidos",
-                    Snackbar.LENGTH_LONG
-                ).show()
-            }
 
         }
 
