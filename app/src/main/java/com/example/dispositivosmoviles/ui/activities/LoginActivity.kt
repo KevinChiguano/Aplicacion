@@ -211,18 +211,6 @@ class LoginActivity : AppCompatActivity() {
         auth = Firebase.auth
 
 
-        binding.btnIngresar.setOnClickListener {
-            authWithFirebaseEmail(
-                binding.txtNombre.text.toString(),
-                binding.txtContasena.text.toString()
-            )
-
-            signInWithEmailAndPassword(
-                binding.txtNombre.text.toString(),
-                binding.txtContasena.text.toString()
-            )
-        }
-
     }
 
     private fun authWithFirebaseEmail(email: String, password: String) {
@@ -295,39 +283,15 @@ class LoginActivity : AppCompatActivity() {
 
         binding.btnIngresar.setOnClickListener {
 
-//            val check = LoginValidator().checkLogin(
-//                binding.txtNombre.text.toString(),
-//                binding.txtContasena.text.toString()
-//            )
-//
-//            if (check) {
-//
-//                lifecycleScope.launch(Dispatchers.IO) {
-//                    saveDataStore(binding.txtNombre.text.toString())
-//                }
-//
-//                var intent = Intent(
-//                    this,
-//                    PrincipalActivity::class.java
-//                )
-//
-//                intent.putExtra("var1", binding.txtNombre.text.toString())
-//
-//                startActivity(intent)
-//
-//
-//            } else {
-//                Snackbar.make(
-//                    binding.txtNombre,
-//                    "Usuario o contraseña invalidos",
-//                    Snackbar.LENGTH_LONG
-//                ).show()
-//            }
-
-            recoveryPasswordWithEmail(
-                binding.txtNombre.text.toString()
+            signInWithEmailAndPassword(
+                binding.txtNombre.text.toString(),
+                binding.txtContasena.text.toString()
             )
 
+        }
+
+        binding.txtvwRegistrarse.setOnClickListener {
+            startActivity(Intent(this, RegistroActivity::class.java))
         }
 
 
