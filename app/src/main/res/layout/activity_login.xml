@@ -133,7 +133,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/txtvwOlvidoPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="44dp"
@@ -151,6 +151,6 @@
         android:layout_marginTop="12dp"
         android:text="Regístrese"
         style="@style/textDatos"
-        app:layout_constraintStart_toEndOf="@+id/textView6"
+        app:layout_constraintStart_toEndOf="@+id/txtvwOlvidoPassword"
         app:layout_constraintTop_toBottomOf="@+id/btnResult" />
 </androidx.constraintlayout.widget.ConstraintLayout>

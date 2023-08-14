@@ -213,29 +213,6 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-    private fun authWithFirebaseEmail(email: String, password: String) {
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d(Constants.TAG, "createUserWithEmail:success")
-                    val user = auth.currentUser
-                    Toast.makeText(
-                        baseContext,
-                        "Authentication success.",
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w(Constants.TAG, "createUserWithEmail:failure", task.exception)
-                    Toast.makeText(
-                        baseContext,
-                        "Authentication failed.",
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                }
-            }
-    }
 
     private fun signInWithEmailAndPassword(email: String, password: String){
         auth.signInWithEmailAndPassword(email, password)
@@ -283,11 +260,34 @@ class LoginActivity : AppCompatActivity() {
 
         binding.btnIngresar.setOnClickListener {
 
-            signInWithEmailAndPassword(
-                binding.txtNombre.text.toString(),
-                binding.txtContasena.text.toString()
-            )
+            if (binding.txtNombre.text.toString().isNotEmpty() && binding.txtContasena.text.toString().isEmpty()){
+                signInWithEmailAndPassword(
+                    binding.txtNombre.text.toString(),
+                    binding.txtContasena.text.toString()
+                )
+            }else{
+                Toast.makeText(
+                    baseContext,
+                    "Authentication failed.",
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
 
+
+        }
+
+        binding.txtvwOlvidoPassword.setOnClickListener {
+            if(binding.txtNombre.text.toString().isNotEmpty()){
+                recoveryPasswordWithEmail(
+                    binding.txtNombre.text.toString()
+                )
+            }else{
+                Toast.makeText(
+                    baseContext,
+                    "Ingrese su correo electronico en el campo",
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
         }
 
         binding.txtvwRegistrarse.setOnClickListener {

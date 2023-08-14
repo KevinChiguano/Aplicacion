@@ -20,4 +20,11 @@
         android:icon="@drawable/favorite_48px"
         android:title="@string/menu_apis"
         android:visible="true" />
+
+    <item
+        android:id="@+id/salir"
+        android:enabled="true"
+        android:icon="@drawable/baseline_exit_to_app_24"
+        android:title="@string/menu_salir"
+        android:visible="true" />
 </menu>

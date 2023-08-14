@@ -84,6 +84,19 @@ class MarvelLogic {
         return items
     }
 
+    suspend fun getAllFavoriteMarvelCharDb(): List<MarvelChars> {
+
+        var items: ArrayList<MarvelChars> = arrayListOf()
+        val itemsAux = DispositivosMoviles.getDbInstance().marvelFavoriteDao().getAllCharacters()
+        itemsAux.forEach {
+            items.add(
+                it.getMarvelChars()
+            )
+        }
+
+        return items
+    }
+
     suspend fun getInitChars(limit: Int, offset: Int): MutableList<MarvelChars> {
         var items = mutableListOf<MarvelChars>()
         try {
@@ -104,6 +117,7 @@ class MarvelLogic {
 
         return items
     }
+
 
     suspend fun insertMarvelCharstoDB(items: List<MarvelChars>) {
         var itemsDB = arrayListOf<MarvelCharsDB>()

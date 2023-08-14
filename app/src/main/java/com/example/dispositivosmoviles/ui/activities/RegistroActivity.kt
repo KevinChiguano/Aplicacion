@@ -28,13 +28,23 @@ class RegistroActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        binding.btnRegistrar.setOnClickListener {
-            authWithFirebaseEmail(
-                binding.txtNombre.text.toString(),
-                binding.txtContasena.text.toString()
-            )
 
-            startActivity(Intent(this, LoginActivity::class.java))
+
+        binding.btnRegistrar.setOnClickListener {
+            if (binding.txtNombre.text.toString().isNotEmpty() && binding.txtContasena.text.toString().isEmpty()){
+                authWithFirebaseEmail(
+                    binding.txtNombre.text.toString(),
+                    binding.txtContasena.text.toString()
+                )
+
+                startActivity(Intent(this, LoginActivity::class.java))
+            }else{
+                Toast.makeText(
+                    baseContext,
+                    "Authentication failed.",
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
         }
     }
 

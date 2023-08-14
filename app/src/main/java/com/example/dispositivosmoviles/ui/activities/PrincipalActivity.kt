@@ -34,26 +34,6 @@ class PrincipalActivity : AppCompatActivity() {
             binding.frmContainer.id,
             FirstFragment())
 
-        var name : String = ""
-        /*intent.extras.let {
-            name = it?.getString("var1")!!
-        }*/
-
-        //Log.d("UCE","Hola ${name}")
-        //binding.textName.text = "Bienvenido "+name.toString()
-
-        //Log.d("UCE","Entrada a Start")
-
-        binding.botonUno.setOnClickListener {
-            //iniciar el objeto intent
-            startActivity(
-                Intent(
-                    this,
-                    LoginActivity::class.java
-                )
-            )
-
-        }
 
 
         binding.bottomNavigation.setOnItemSelectedListener() { item ->
@@ -90,6 +70,16 @@ class PrincipalActivity : AppCompatActivity() {
                         ThirdFragment()
                     )
 
+                    true
+                }
+                R.id.salir -> {
+                    // Respond to navigation item 2 click
+                    startActivity(
+                        Intent(
+                            this,
+                            LoginActivity::class.java
+                        )
+                    )
                     true
                 }
                 else -> false
