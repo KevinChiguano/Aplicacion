@@ -31,17 +31,15 @@ class RegistroActivity : AppCompatActivity() {
 
 
         binding.btnRegistrar.setOnClickListener {
-            if (binding.txtNombre.text.toString().isNotEmpty() && binding.txtContasena.text.toString().isEmpty()){
+            if (binding.txtNombre.text.toString().isNotEmpty() && binding.txtContasena.text.toString().isNotEmpty()){
                 authWithFirebaseEmail(
                     binding.txtNombre.text.toString(),
                     binding.txtContasena.text.toString()
                 )
-
-                startActivity(Intent(this, LoginActivity::class.java))
             }else{
                 Toast.makeText(
                     baseContext,
-                    "Authentication failed.",
+                    "Llene los campos",
                     Toast.LENGTH_SHORT,
                 ).show()
             }
@@ -55,11 +53,12 @@ class RegistroActivity : AppCompatActivity() {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(Constants.TAG, "createUserWithEmail:success")
                     val user = auth.currentUser
-                    Toast.makeText(
-                        baseContext,
-                        "Authentication success.",
-                        Toast.LENGTH_SHORT,
-                    ).show()
+//                    Toast.makeText(
+//                        baseContext,
+//                        "Authentication success.",
+//                        Toast.LENGTH_SHORT,
+//                    ).show()
+                    startActivity(Intent(this, LoginActivity::class.java))
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(Constants.TAG, "createUserWithEmail:failure", task.exception)

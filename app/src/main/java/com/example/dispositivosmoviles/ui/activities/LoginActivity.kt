@@ -260,7 +260,7 @@ class LoginActivity : AppCompatActivity() {
 
         binding.btnIngresar.setOnClickListener {
 
-            if (binding.txtNombre.text.toString().isNotEmpty() && binding.txtContasena.text.toString().isEmpty()){
+            if (binding.txtNombre.text.toString().isNotEmpty() && binding.txtContasena.text.toString().isNotEmpty()){
                 signInWithEmailAndPassword(
                     binding.txtNombre.text.toString(),
                     binding.txtContasena.text.toString()
@@ -268,7 +268,7 @@ class LoginActivity : AppCompatActivity() {
             }else{
                 Toast.makeText(
                     baseContext,
-                    "Authentication failed.",
+                    "Llene los campos.",
                     Toast.LENGTH_SHORT,
                 ).show()
             }
