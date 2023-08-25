@@ -77,7 +77,7 @@ class PrincipalActivity : AppCompatActivity() {
                     startActivity(
                         Intent(
                             this,
-                            LoginActivity::class.java
+                            MenuPrincipalActivity::class.java
                         )
                     )
                     true

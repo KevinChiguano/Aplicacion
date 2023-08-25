@@ -22,7 +22,22 @@
         android:layout_height="60dp"
         android:layout_marginTop="72dp"
         android:text="Capturar"
+        android:textSize="18dp"
+        style="@style/ButtonIngresar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgCapture" />
+
+    <Button
+        android:id="@+id/btnSalir"
+        style="@style/ButtonIngresar"
+        android:layout_width="142dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="44dp"
+        android:textSize="18dp"
+        android:text="Salir"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnCapture" />
 </androidx.constraintlayout.widget.ConstraintLayout>

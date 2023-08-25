@@ -37,6 +37,14 @@ class CameraActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        binding.btnSalir.setOnClickListener {
+            startActivity(Intent(this, MenuPrincipalActivity::class.java))
+        }
+    }
+
     private val cameraResult = registerForActivityResult(StartActivityForResult()) {result ->
 
         when(result.resultCode){

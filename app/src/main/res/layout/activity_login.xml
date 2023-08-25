@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="48dp"
         android:layout_marginTop="20dp"
-        android:text="Pedidos Online"
+        android:text="Aplicación Marvel"
         style="@style/textTituloPedidos"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView2" />
@@ -121,7 +121,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
     <Button
-        android:id="@+id/btnResult"
+        android:id="@+id/btnFacebook"
         style="@style/ButtonRedes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -152,5 +152,5 @@
         android:text="Regístrese"
         style="@style/textDatos"
         app:layout_constraintStart_toEndOf="@+id/txtvwOlvidoPassword"
-        app:layout_constraintTop_toBottomOf="@+id/btnResult" />
+        app:layout_constraintTop_toBottomOf="@+id/btnFacebook" />
 </androidx.constraintlayout.widget.ConstraintLayout>

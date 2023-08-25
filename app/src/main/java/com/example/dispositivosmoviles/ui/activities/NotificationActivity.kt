@@ -51,6 +51,14 @@ class NotificationActivity : AppCompatActivity() {
             sendNotificationTimePicker(calendar.timeInMillis)
         }
     }
+
+    override fun onStart() {
+        super.onStart()
+
+        binding.btnSalir.setOnClickListener {
+            startActivity(Intent(this, MenuPrincipalActivity::class.java))
+        }
+    }
     @SuppressLint("ScheduleExactAlarm")
     private fun sendNotificationTimePicker(time: Long) {
 

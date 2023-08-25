@@ -36,5 +36,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnNotification" />
 
+    <Button
+        android:id="@+id/btnSalir"
+        style="@style/ButtonIngresar"
+        android:layout_width="318dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="44dp"
+        android:textSize="18dp"
+        android:text="Salir"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnNotificationProgramada" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,8 +8,6 @@ class BiometricViewModel: ViewModel() {
 
     var isloading = MutableLiveData<Boolean>()
 
-
-
     suspend fun charginData(){
         isloading.postValue(true)
         delay(5000)

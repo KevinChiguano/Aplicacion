@@ -79,6 +79,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_contasena" />
 
+    <Button
+        android:id="@+id/btn_salir"
+        style="@style/ButtonIngresar"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Salir"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_registrar" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

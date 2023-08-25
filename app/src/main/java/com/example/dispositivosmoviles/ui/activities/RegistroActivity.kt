@@ -29,6 +29,9 @@ class RegistroActivity : AppCompatActivity() {
         super.onStart()
 
 
+        binding.btnSalir.setOnClickListener {
+            startActivity(Intent(this, LoginActivity::class.java))
+        }
 
         binding.btnRegistrar.setOnClickListener {
             if (binding.txtNombre.text.toString().isNotEmpty() && binding.txtContasena.text.toString().isNotEmpty()){

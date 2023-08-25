@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.activities.MenuPrincipalActivity">
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="Menu principal"
+        android:textColor="@color/black"
+        android:textSize="50sp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnMarvel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_marginTop="116dp"
+        android:text="Marvel"
+        android:textSize="25dp"
+        style="@style/ButtonIngresar"
+        android:drawableLeft="@drawable/ic_surfing_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleTextView" />
+
+    <Button
+        android:id="@+id/btnCamara"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="Camara"
+        android:textSize="25dp"
+        style="@style/ButtonIngresar"
+        android:drawableLeft="@drawable/ic_camera_alt_24"
+        app:layout_constraintTop_toBottomOf="@id/btnMarvel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+    <Button
+        android:id="@+id/btnNotificacion"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="Notificaciones"
+        android:textSize="25dp"
+        style="@style/ButtonIngresar"
+        android:drawableLeft="@drawable/ic_notifications_24"
+        app:layout_constraintTop_toBottomOf="@id/btnCamara"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+    <Button
+        android:id="@+id/btnInternet"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="Busqueda Internet"
+        android:textSize="25dp"
+        style="@style/ButtonIngresar"
+        android:drawableLeft="@drawable/ic_search_24"
+        app:layout_constraintTop_toBottomOf="@id/btnNotificacion"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <Button
+        android:id="@+id/btnLocalizacion"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_marginTop="72dp"
+        android:text="Localizacion"
+        android:textSize="25dp"
+        style="@style/ButtonIngresar"
+        android:drawableLeft="@drawable/ic_location_on_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnInternet" />
+
+    <Button
+        android:id="@+id/btnSalir"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_marginTop="72dp"
+        android:text="Salir"
+        android:textSize="25dp"
+        style="@style/ButtonIngresar"
+        android:drawableLeft="@drawable/ic_exit_to_app_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnLocalizacion" />
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/imaview"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="12dp"
+        android:src="@drawable/logo_marvel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnSalir" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
