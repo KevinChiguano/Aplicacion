@@ -123,6 +123,9 @@ App con funcionalidades de notificación, cámara, autenticación biometrica, lo
 ![Notificacion1](https://github.com/KevinChiguano/Aplicacion/assets/105686372/1dabd78f-8591-42c0-aaf1-8a998807c0db)
 
 ![Busqueda1](https://github.com/KevinChiguano/Aplicacion/assets/105686372/6c0aae97-f799-4914-a447-10de1005bd30)
+
+## Recomendaciones
+* Utilizar el emulador de android con el API 33 para evitar problemas con la app.
 ![Busqueda2](https://github.com/KevinChiguano/Aplicacion/assets/105686372/f8955f26-7b8b-4f93-b652-f846601e8c1d)
 
 ![Localizacion1](https://github.com/KevinChiguano/Aplicacion/assets/105686372/88772e6e-154d-4c5c-8bbc-b667e823b9b6)
