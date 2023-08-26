@@ -1,7 +1,8 @@
 # Marvel: App Dispositivos Móviles
 
 Proyecto final individual de dispositivos móviles.
-App con funcionalidades de notifición, camara, autenticación biometrica, localización, busqueda por voz, y consumo de de api Restful.
+
+App con funcionalidades de notificación, cámara, autenticación biometrica, localización, busqueda por voz, y consumo de de api Restful.
 
 ## Caracteristicas de la app
 
