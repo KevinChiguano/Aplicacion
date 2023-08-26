@@ -16,7 +16,7 @@
         app:layout_constraintHorizontal_bias="0.414"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logo_edi" />
+        app:srcCompat="@drawable/marvelheroes" />
 
     <TextView
         android:id="@+id/textView"
